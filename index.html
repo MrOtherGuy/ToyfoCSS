@@ -38,7 +38,7 @@
 <li>CSS editor</li>
 </ol>
 
-<p>You can try styles by inputing them to the CSS editor, and if they are valid then Toyfox applies them to its broweser window. Here, try some minimalism, just copy-paste this to the CSS editor</p>
+<p>You can try styles by inputing them to the CSS editor, and if they are valid then Toyfox applies them to its browser window. Here, try some minimalism, just copy-paste this to the CSS editor</p>
 
 <pre><code>
 #page-action-buttons,.toolbarbutton{
@@ -223,7 +223,7 @@ This is actually the same thing as using selector <code>#new-tab-button</code> a
 
 <p>In both cases the later is below the former in the document tree. Okay, for the tab example we would need to modify the analogy a bit but it would still make sense. The important thing to know is that we can <i>never do the opposite</i>. So we can not make a rule that applies to tabs that come before the selected one. And we can not create a rule that applies to toolbarbuttons which have a child element called toolbarbutton-icon.</p>
 
-<p>Kind of an exeption is the :hover pseudo-class. By the tree-analogy it would mean something like "when you touch the tree". So even if you just touch one leaf, you are still touching the whole tree because the leaf is part of the tree. And thus the state is triggered for each ancestor of that leaf except for sections that are in another branch. Try this:</p>
+<p>Kind of an exception is the :hover pseudo-class. By the tree-analogy it would mean something like "when you touch the tree". So even if you just touch one leaf, you are still touching the whole tree because the leaf is part of the tree. And thus the state is triggered for each ancestor of that leaf except for sections that are in another branch. Try this:</p>
 <pre><code>
 #main-window:hover{ background: yellow }
 #TabsToolbar:hover{ background: blue }
@@ -435,7 +435,7 @@ border-width: 2px 0 0 2px;
 .tabbrowser-tab{ background: blue }
 .tabbrowser-tab[selected]{ background: red }
 </code></pre>
-<p>You might be tempted to say that whichever comes lated will be used. Makes kind of sense, and infact that is what can happen. But the order of the rules in the stylesheet is only the last thing that the browser checks when determining importance. And indeed, if you put those rules in opposite order, the tab will still be red</p>
+<p>You might be tempted to say that whichever comes lated will be used. Makes kind of sense, and in fact that is what can happen. But the order of the rules in the stylesheet is only the last thing that the browser checks when determining importance. And indeed, if you put those rules in opposite order, the tab will still be red</p>
 
 <p>Priority in descending order:</p>
 <ol>
