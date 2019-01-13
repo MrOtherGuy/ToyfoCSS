@@ -1,0 +1,120 @@
+body{
+  display:flex;
+  overflow:hidden;
+  background-color: rgb(50, 50, 50);
+  color:rgb(198, 198, 144);
+  margin: 0px;
+  padding: 8px 8px 2px 8px;
+  box-sizing: border-box;
+  line-height: 1.4em;
+  scrollbar-color: rgb(198, 198, 144) rgb(50, 50, 50);
+  height: 100vh;
+	font-family: Arial;
+}
+
+a{ color: rgb(144, 198, 198) }
+
+h1,h2,h3{
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border: 2px solid;
+  border-radius: 5px;
+  color: rgb(144, 198, 198);
+  }
+
+#content{
+  overflow: auto;
+  padding: 8px;
+  max-width: 800px;
+}
+iframe{ flex-grow: 1; box-sizing:border-box }
+label > span{ width:16px; height: 20px; padding-left: 4px }
+label{ display: flex; justify-content: center; background: rgba(20,20,40,0.2) }
+label:hover{ background:rgba(50,50,90,0.2) }
+
+.contentContainer{
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.infobar{
+  margin-top: 3px;
+  padding: 4px 200px 0 200px;
+  background-image: linear-gradient(to right, transparent, rgb(198, 198, 144) 40%, white 50%, rgb(198, 198, 144) 60%, transparent );
+  background-size: 100% 3px;
+  background-repeat: no-repeat;
+}
+.infobar:not(:hover) > *{ opacity: 0.4 }
+
+#toggleFrame{ display: none }
+#toggleFrame~label{ padding:2px }
+
+#toggleFrame:not(:checked) + iframe{ visibility: collapse }
+
+code{
+  padding: 3px;
+  white-space: nowrap;
+  color: #CC6C6C;
+  background: rgba(255,255,255,0.1)
+}
+
+pre > code{ white-space: pre-wrap; background: transparent }
+pre{
+  background-color: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  border: 1px solid;
+  padding-left: 3px;
+  line-height: 1.4em
+}
+
+code > .tag{color:#CC4422}
+code > .id{color:#6CCC6C}
+code > .cl{color:#B0A000}
+code > .ps{color:#B0B0B0}
+code > .val{color:#8877DD}
+code > .pr{color:#DD55CC}
+code > .i{color:#EE2222}
+
+@media screen and (min-width:1200px){
+  body{
+    flex-direction: row-reverse;
+    justify-content: stretch
+  }
+  iframe{
+    height: 100%;
+    box-sizing:border-box;
+    max-width: 40vw;
+  }
+  #content{
+    overflow:auto;
+    height: 96vh;
+    padding-right: 40px;
+    width: 50vw
+  }
+  label{ align-items: center }
+  #toggleFrame ~ label > span{ transform: rotate(90deg) }
+  #toggleFrame:not(:checked) ~ label > span{ transform: rotate(270deg) }
+}
+
+@media screen and (max-width:1199px){
+  body{ flex-direction: column; align-items: center; }
+  iframe{
+    height: 32vh;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  label{ width: 100%; display: flex; justify-content: center}
+  #toggleFrame:not(:checked) ~ label > span{ transform: rotate(180deg) }
+}
+
+@media (min-resolution: 150dpi) {
+  body {
+    font-size: 1.5em;
+    line-height: 1.7em
+  }
+}
+
+

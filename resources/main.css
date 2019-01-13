@@ -1,0 +1,316 @@
+body{background:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAvSURBVChTY0wvaGBABbevX4SyYIAJSuMFg1ERo5N7IJQJA6qa+lAWDAxR3zEwAACtFwVI5w5HdQAAAABJRU5ErkJggg==');display: grid;}
+
+/* ELEMENT DEFAULTS */
+
+div{
+	display: flex;
+	float: none;
+	box-sizing: border-box;
+	align-content: center;
+	overflow: hidden;
+	flex-shrink:0;
+	white-space: nowrap;
+}
+
+body>*{ display: initial; float: initial; overflow: auto; /*! white-space: initial */ }
+
+*[hidden]{ display: none; }
+
+.toolbox{ flex-direction: column }
+
+.toolbaritem{ align-items: center; }
+
+.hbox,
+.toolbar{
+	flex-direction: row
+}
+
+#titlebar, .vbox{ flex-direction: column; }
+
+.menu{
+	padding: 0 1px;
+	margin: 1px 1px;
+	border: 1px solid transparent;
+	align-self: start;
+}
+
+.hbox,
+.vbox{
+	flex-shrink: 1;
+	overflow: auto
+}
+
+.vbox,
+.hbox,
+.toolbaritem{
+	flex-grow:1;
+	align-items: stretch;
+}
+
+.spacer{ width:4px }
+
+.input-box{ align-items: center; flex-grow: 1; }
+
+.toolbarbutton{margin: 2px; cursor: pointer; }
+
+.input-box > div{ display: inline; position: absolute; }
+
+.input-box{clip-path: inset(0px)}
+
+.scrollbox{
+	flex-wrap:nowrap;
+	overflow:auto;
+	flex-grow:0;
+	width: 100%;
+	flex-shrink: 1;
+	scrollbar-width: none;
+}
+
+.label-container{
+	align-items: center;
+	flex-grow: 1;
+  clip-path: inset(0);
+	pointer-events:none;
+}
+
+.label{
+	position: absolute;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.toolbarbutton-icon{
+	box-sizing: content-box;
+	padding: 6px;
+	width: 16px;
+	height: 16px;
+	justify-content: center;
+	align-items: end
+}
+
+.icon-image{ width: 16px; background: radial-gradient(black, black 20%, transparent 30%); }
+.icon-image:hover{ filter: invert(1) }
+
+.urlbar-icon::after{ content:""; }
+
+.tabbrowser-tab{
+	background: rgba(50,50,60,0.5);
+	border: 1px solid olive;
+	border-bottom: none;
+	flex-grow: 1;
+	max-width: 140px;
+  min-width:80px;
+	position:relative;
+}
+
+.tree{	list-style: inside; padding-left: 6px }
+
+
+/* Unique styling */
+
+#main-window{
+	width: 400px;
+	height: 400px;
+	background-color: grey;
+	resize: both;
+	overflow: hidden;
+	flex-direction: column;
+	border: 1px solid grey;
+	box-shadow: 0 0 3px 1px black;
+	border-radius: 4px;
+	color:rgb(255, 255, 255);
+	
+	--toolbar-bgcolor: rgba(30,40,66,0.7);
+	
+}
+
+.toolbar{ padding: 2px }
+
+#nav-bar,#PersonalToolbar{ background: var(--toolbar-bgcolor) }
+#TabsToolbar{ padding-bottom: 0px; }
+/*
+#TabsToolbar,
+#TabsToolbar > .toolbar-items,
+#tabbrowser-tabs{
+	flex-shrink: 1;
+}*/
+
+.titlebar-buttonbox{ background: rgba(50,50,50,0.6) }
+
+
+.tabbrowser-tab:hover{ background-color: rgba(50,50,60,0.7)  }
+.tabbrowser-tab[selected]{background:var(--toolbar-bgcolor); color: white}
+
+.tab-close-button{ background: radial-gradient(red, red 20%,transparent 30%); }
+
+#urlbar{
+	background:rgba(255,255,255,0.2);
+  padding-left: 4px;
+	border:1px solid grey;
+	margin:2px;
+	border-radius: 3px
+}
+
+#urlbar:hover{ filter:brightness(150%) }
+#PlacesToolbar{padding: 2px }
+
+.menu:hover,
+.toolbarbutton:hover,
+.bookmark-item:hover,
+#sidebar-box .label:hover{
+	background: rgba(50,50,50,0.6);
+	box-shadow: 0 0 2px 1px black;
+}
+
+.bookmark-item{
+	height: 24px;
+	width: 80px;
+	border: 1px solid transparent;
+  position: relative
+}
+
+#sidebar{
+	width:100px;
+	background: var(--toolbar-bgcolor);
+	max-width: 100px;
+	min-width: 100px;
+}
+
+#PanelUI-button{ flex-grow: 0 }
+
+#appcontent{
+	flex-grow: 1;
+	flex-shrink: 1;
+	justify-content: center;
+	align-items: center
+}
+
+/* Freaky colors for demo */
+
+#main-window[data-demo-colors]{ color: black }
+#main-window[data-demo-colors] #navigator-toolbox{ background:blue;}
+#main-window[data-demo-colors] #titlebar{background: brown;}
+#main-window[data-demo-colors] #TabsToolbar{background:yellow;}
+#main-window[data-demo-colors] #nav-bar{background:olive}
+#main-window[data-demo-colors] #PersonalToolbar{background:grey}
+#main-window[data-demo-colors] #sidebar-box{background:lime}
+#main-window[data-demo-colors] #content-deck{ background:red; }
+#main-window[data-demo-colors] #urlbar{ background:pink; border-color: azure }
+#main-window[data-demo-colors] div{ opacity:0.8}
+#main-window[data-demo-colors] div:hover{ opacity:1}
+#main-window[data-demo-colors] .tabbrowser-tab[selected]{background: green; color: wheat }
+#main-window[data-demo-colors] .urlbar-icon{ background-color: cyan; }
+#main-window[data-demo-colors] .titlebar-button{ background:blue }
+#main-window[data-demo-colors] .toolbarbutton{background:lime;color: red}
+
+/* Supporting styles for demo purposes */
+
+div{ transition: all 82ms linear }
+#PersonalToolbar{ position: relative }
+
+/* Applying transform makes us able to use coordinates relative to #main-window */
+#main-window{transform: translateX(0px);}
+
+/*
+#page-action-buttons,.toolbarbutton{
+opacity:0;
+}
+#urlbar{ transition: background-color 82ms linear }
+#nav-bar:not(:hover) #urlbar{
+background: transparent;
+border-color:transparent;
+}
+
+.toolbar:hover #page-action-buttons,
+.toolbar:hover .toolbarbutton{
+opacity:1
+}
+#PersonalToolbar{
+opacity:0;
+margin-top: -26px;
+}
+#nav-bar:hover + #PersonalToolbar,
+#PersonalToolbar:hover{
+margin-top:0;
+opacity:1
+}*/
+
+#appcontent{ flex-grow: 1; justify-content: center; align-items: center }
+
+.demo-container{
+
+	flex-grow: 0;
+	justify-content: center;
+	align-items: center;
+	background: red;
+	visibility: collapse;
+	overflow: initial;
+	white-space: initial;
+}
+.demo-box{
+	background: yellow;
+	border:0px solid black;
+		overflow: initial;
+	white-space: initial;
+}
+.demo-box > span{ background: blue; }
+
+
+/* CSS EDITOR */
+body{
+	height:100vh;
+	margin:0;
+	padding:8px;
+	box-sizing: border-box
+}
+
+#main-window{max-width: 98%;max-height: 98%}
+
+
+
+#doctree{grid-area: a}
+#doctree+div{grid-area: b}
+textarea{
+	box-sizing: border-box;
+	resize:none;
+	grid-area: c;
+	white-space: pre-wrap;
+	background: rgb(200,250,200)
+}
+textarea.invalid{ background: lightcoral }
+
+iframe{width:99%;height: 99%;box-sizing: border-box}
+
+@media screen and (min-width:800px){
+	body{
+		grid-template: 
+     "b b a" auto
+     "b b c" 1ch
+     "b b c" 30% / 50% 10px 1fr;
+	}
+	@media screen and (min-height:800px){
+		body{
+			grid-template: 
+       "b b a" auto
+       "b b a" 1ch
+       "c c a" 30% / 60% 10px 1fr;
+		}
+	}
+}
+@media screen and (max-width:799px){
+	body{
+		grid-template: 
+     "b b b" 60%
+     "b b b" 1px
+     "a c c" 1fr / 2fr 1fr 1fr;
+	}
+	@media screen and (min-height:800px){
+		body{
+			grid-template: 
+       "b b b" 50%
+       "b b b" 1px
+       "a c c" 1fr / 2fr 1fr 1fr;
+		}
+}

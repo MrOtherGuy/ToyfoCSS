@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>ToyfoCSS - CSS Intro</title>
+  <link href="guide.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="guide.js"></script>
+</head>
+<body>
+<input type="checkbox" id="toggleFrame" name="toggleFrame"></input>
+<iframe src="resources/toyfox.html" height="100%" width="100%"></iframe>
+<label for="toggleFrame"><span>▲</span></label>
+<div class="contentContainer">
+<div id="content">
+<h1>The other guide to CSS hacking</h1>
+<p>So, you're interested about learning how the skill to customize your browsing experience? Certainly you must be, since you've stumbled upon this page. Just copy-pasting existing styles wasn't enough, huh? Good for you! Being able to create something on your own - something <i>unique</i> - can be really fulfilling. Or, if you are in only to learn how to debug existing styles that's cool too, it's your effort anyhow. You may pay the price with sweat and tears but it's <b>your sweat and tears</b> and in the end you'll get exactly what you personally are after.</p>
+
+<p>Now, if you are after a collection of existing styles, you can find several at <a href="https://github.com/MrOtherGuy/firefox-csshacks" rel="nofollow">my repository</a> which also has a quick guide on how to setup userChrome.css. Others very much worth mentioning are:
+<ol>
+  <li><a href="https://github.com/Aris-t2/CustomCSSforFx" rel="nofollow">Aris-t2/CustomCSSforFx</a></li>
+  <li><a href="https://github.com/Timvde/UserChrome-Tweaks" rel="nofollow">Timvde/UserChrome-Tweaks</a></li>
+  <li><a href="https://github.com/overdodactyl/ShadowFox" rel="nofollow">ShadowFox universal dark theme</a></li>
+</ol>
+<p>Or just ask folks at reddit <a href="https://www.reddit.com/r/FirefoxCSS/" rel="nofollow">r/firefoxCSS</a> which is quite active.</p>
+
+<p>But hey, we are interested in learning how this stuff works right? <i>RIGHT!?</i></p>
+
+<p>This guide is will eventually specialize in Firefox UI modifications, but starts from the basic CSS concepts. You will be introduced to syntax, document model, properties and all sorts of good stuff. That's quite a long road ahead for sure, however being familiar with how CSS works is really a requirement for the later sections of this guide, since it won't make too much sense without. And hey, the CSS intro applies to web development basics just fine, even if the examples are somewhat specific to Firefox UI.</p>
+<br>
+<p>So let's dive in - start by clicking the triangle/arrow icon to the top or right.</p>
+<br>
+<h2>Whoa there, what is this?</h2>
+
+<p>That thing up there (or on the side depending on your window size), that is Toyfox. Yeah, I know, I just had to name it something during development and that's what it became. And now you're stuck with it. Anyway, it will be your sandbox. There's three panes there:</p>
+<ol>
+<li>Browser window</li>
+<li>Document tree</li>
+<li>CSS editor</li>
+</ol>
+
+<p>You can try styles by inputing them to the CSS editor, and if they are valid then Toyfox applies them to its broweser window. Here, try some minimalism, just copy-paste this to the CSS editor</p>
+
+<pre><code>
+#page-action-buttons,.toolbarbutton{
+  opacity:0;
+}
+#urlbar{ transition: background-color 82ms linear }
+#nav-bar:not(:hover) #urlbar{
+  background: transparent;
+  border-color:transparent;
+}
+.toolbar:hover #page-action-buttons,
+.toolbar:hover .toolbarbutton{
+  opacity:1
+}
+#PersonalToolbar{
+  opacity:0;
+  margin-top: -32px;
+}
+#nav-bar:hover + #PersonalToolbar,
+#PersonalToolbar:hover{
+  margin-top:0;
+  opacity:1
+}
+</code></pre>
+
+<p>Pretty sweet, right? Don't worry about the rules you just applied for now. That's just a teaser about what <b>you</b> can do to the real Firefox after you are done with this guide. But clear the CSS editor for now and we'll carry on.</p>
+
+<h1>Toyfox</h1>
+<p>The browser window there represents something akin to a generic browser, Firefox more specifically (and you can't really customize any other browser to nearly a same degree anyway). Don't try to use it to browse any "nasty" sites though, <i>she</i> doesn't like it very much and might even bite you. There are some simple features like add/close a tab, toggle sidebar and bookmarks bar. You can also click a magic-button to enter magic realm and all the secrets of the universe shall be known to you. Well, if not that then at least it can help figuring out element boundaries as well as visualizing some structure by brightening elements when cursor is on top of them.</p>
+
+<p>Just click a few buttons and see what they do - if anything at all.</p>
+
+<p>But how does this relate to Firefox? Well, Toyfox is structured in roughly the same way as Firefox is, although it only includes the main UI (User Interface). That same code you used just now, will work with very minor changes in real Firefox. There are some technicalities why it won't work exactly as is. But you can certainly create rules which work the same on both. So just try stuff.</p>
+
+<p>If you are familiar with how CSS syntax works and how CSS and document tree relate to each other you can jump ahead right about <a href="#browserChanges">here</a></p>
+
+<p>The document tree view shows that very same window, but in tree mode. HOLD UP a second, what you mean the same window? Well, glad you asked.</p>
+
+<p>This is your first and very important lesson. The window you see is really this huge tree of nodes or elements (there is a small difference between element and node but it's not a important for us and I may use the terms interchangeably). When you start the browser the program renders that tree to a visual browser.</p>
+
+<p>It must have some rules which it uses to turn those abstract nodes to a visual representation right? What do you think those are? Anyone? CSS! Indeed, there is enormous amount of styles built in to Firefox. Much less so to Toyfox btw.</p>
+
+<p>In essence, what all CSS does is ask the browser to apply the style properties we define to elements in the tree that match our description.</p>
+
+<p>To put this another way, CSS does not work in isolation. If that document tree changes, then your rules might not apply to it anymore. That tree and CSS are sides of the same coin. The tree defines structure, CSS defines appearance. Neither is any good in itself.</p>
+
+<p>Think about this for a moment. The document tree exists outside the CSS realm. And the browser uses a list of rules to visualize that tree. We cannot modify that tree - that structure at all, we add rules and the browser applies them to some elements. This for example doesn't have any effect: <code>#some-thing{ background:red }</code> That is perfectly valid CSS, and the browser applies it to that document. However, it does not visually change anything because the are no elements that match our description "#some-thing"</p>
+
+<p>Certainly that is very limiting for us, right? Well yes, no question about it. But you can still do a whole lot. The key-thing to grasp right now is that this is what CSS <i><b>IS</b></i>. Understanding this concept is crucial. And that's also why the tree view of the document is so important. It shows you all the stuff there is to modify.</p>
+
+<p>In web development context the situation is quite different. There you are also in control of the document tree structure which is HTML so you can create all the features you like. But if for some reason you are only able to change CSS then the document is equally locked. But now let's get on customizing!</p>
+
+<h2>The good stuff</h2>
+
+<p>This is the moment you've been waiting for right? Type this to the CSS input box: <code>#main-window{ background-color:red }</code>
+</p>
+<p>Ahh, My eyes, I didn't ask for this! Quick, change that to something better, like <code>rgb(60,60,70)</code>
+</p>
+<p>Much better, thanks. So let's break down what you just did.</p>
+
+<h2>Terminology</h2>
+<p><i>Ugh, boooring.</i> Yeah, but bear with me this won't be take long and makes future much easier.</p>
+<ul>
+<li>Stylesheet - a CSS file like userChrome.css, or the contents of the CSS editor in Toyfox, basically a collection of all your rules</li>
+<li>Ruleset - the thing you just applied <code>#main-window{ background-color:red}</code>, which can be further broken down to:</li>
+<li>Selectors - comma-separated list of element identifiers like: <code>#main-window,.menu</code></li>
+<li>Declaration block - the whole deal within curly braces: <code>{ background-color:red; color: blue}</code> - <b>semi-colons</b> separate each:</li>
+<li>Declaration - here we have two declarations: 1.<code>background-color:red</code> and 2.<code>color:blue</code></li>
+<li>[Property]:[value] - You can find out all the properties that browsers support and values they can use from <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference" rel="nofollow">MDN</a></li>
+</ul>
+
+<p>See, that didn't take long at all - unless you got stuck on MDN, happens to the best of us.</p>
+
+<p>In short, we first select which elements we want to target with out rules. And then list which properties we want to modify. That's it, we can all go home for milkshakes!</p>
+
+<p>Well, technically yes. And you can certainly find everything else you need from MDN but there is a whole lot of very technical stuff on MDN so that might not be the easiest path.</p>
+
+<p>Lets get back to our simple example: <code>#main-window{ background-color:red }</code>
+
+notice how there are multiple ways to represent color. One is color keyword, like red. Others rgb() like you saw, <code>rgba(30,40,66,0.7)</code> - which takes an additional <b>a</b>lpha parameter to control transparency and html syntax <code>#808000</code> and some others.</p>
+
+<p>So what happened there? We changed the color of pretty much everything except text, how can that be? If you look at the tree view, you can see that <code>#main-window</code> is there up top. That means basically that this element is behind everything inside it. And so, if there are no fully opaque elements on top of it, then its background will be seen through.
+</p>
+
+<p>See if you can only apply the background-color to tabs toolbar. Scroll through the tree view until you can see something which might work, I'll wait.</p>
+
+<p><code>#TabsToolbar</code> perhaps? Nice. Now, that background is only "under" everything that is inside tabs toolbar. Next, lets change text to something not-blinding-white. Try this:<code>#main-window{ color:rgb(198, 198, 144) }</code></p>
+
+<p>What? How come all text except selected tab become like some mustard. Some properties, such as color - which rather confusingly means text-color - are <i>inherited</i>. Meaning, when you add it to parent element, it will be used by everything under it until the element uses some explicit color. In this case a selected tab sets its own color to white.</p>
+
+<p>All those diamond icons changed color too though. Right, well they are actually text so that explains that. <i>However</i>, many icons in the real Firefox UI behave similarly. They use SVG icons which can be made to use current elements' text color to fill their icon.</p>
+
+<h1>Delving deeper</h1>
+<h2>Selectors</h2>
+<p>At this point you might have thought what do those colors in the tree view mean. Somehow those relate to matching rules to correct elements but how? First of all, all elements have a tag-name, a type if you will. This is invisible in the tree-view though since everything in Toyfox is a <code>DIV</code>. But an element may also have an ID (red) and multiple classes (yellow). IDs should be unique in a document, but there can be multiple elements with a single class.</p>
+
+<p>When you use IDs, then the appearance of only one element will change (with the exception of inherited properties and result of transparency like we saw). ID selectors always start with a <code>#</code> like so: <code>#PanelUI-button{ color:red }</code> This means that this color value will only apply to element with an ID "PanelUI-button". In this case it will get inherited by its <code>.toolbarbutton-icon</code> which then colors the actual diamond to red.</p>
+
+<p>Classes are used to categorize elements to groups where the visual representation of each element should be similar in some way. Such as all buttons should look similar, makes sense right?</p>
+<p>So, maybe we want to have a border on all our buttons. Lets try <code>toolbarbutton{ border: 1px solid #888 }</code></p>
+<p>Shoot, nothing. Notice that all the yellow text classes begin with a dot. Class selectors should always begin with a dot so add that there.</p>
+
+<p>Well, it worked but everything also shifted - sort of became taller. Indeed, maybe just add a partially transparent background instead to make them stand out a bit more - <code>background-color: rgba(255,255,255,0.2)</code>. Just keep in mind for now that border can modify computed width/height. Still, with classes we can more easily style multiple similar elements.</p>
+
+<p>In real Firefox <code>toolbarbutton</code> (without the dot) would have worked because there <i>is</i> an element type toolbarbutton. Selectors that don't begin with either <code>.</code> or <code>#</code> are Type selectors. We can't demo type selectors with Toyfox though but they should be used for very similar purposes as classes</p>
+
+<h2>Constructing rulesets</h2>
+
+<p>The first thing you want to do is to figure out what element or elements you want to change. So you need to refer to the tree view to see what elements are called. Well, that one is obvious but you should generally group your rulesets in way that doesn't repeat same things too much. This will make it much easier to maintain. So lets say we want to make a rounded UI. Round buttons, tabs and url bar. You could write rules for each (and in some cases you may need to do just that) but generally it's best to group stuff if you can by listing the selectors, separated with a comma:
+</p>
+<pre><code>
+.tabbrowser-tab,
+.toolbarbutton,
+#urlbar{
+  border-radius: 20px;
+}  
+</code></pre>
+<p>Now, this declaration block is applied to every element that matches any of those selectors</p>
+
+<h2>Combinators</h2>
+<p>Yikes, sounds pretty complicated. Oh but here is where the real fun begins. Often what you actually want to do is to style things based on some <i>condition.</i>. So open a bunch of tabs in Toyfox. Now, as you can see the selected tab is different color, and so are every tab when your cursor is on top of them. Those are .tabbrowser-tab elements alright but we are applying some different rules to them when those conditions are met.</p>
+
+<h3>Descendants</h3>
+
+<p>Here the document tree starts to finally make sense. Okay, we have these <code>.toolbarbutton</code> elements everywhere. So how do we target some specific ones such as the ones in the main toolbar <code>#nav-bar</code>. Well, you can <i>combine</i> selectors by putting a space between selectors: <code>#nav-bar .toolbarbutton{ background:red }</code> This will apply to all toolbarbuttons which are inside #nav-bar. Those buttons are <i>Descendants</i> of #nav-bar.</p>
+
+<h3>Children</h3>
+
+<p>Children work exactly the same as descendants <i>except</i> they only apply to immediate child nodes. Change the selector to this: <code>#nav-bar > .toolbarbutton</code></p>
+
+<p>Hmm, only the button that toggles bookmarks bar changed color. If you now check the tree view, you will see that #nav-bar has three <i>immediate</i> child nodes: <code>#nav-bar-customization-target</code>, <code>#BMB-button</code> and <code>#PanelUI-button</code>, but only the BMB-button has a class .toolbarbutton.</p>
+
+<h3>Adjacent Sibling</h3>
+
+<p>Open at least four tabs now. Wait, actually we might want a bit more space for this first. <i>Adjacent</i> to the new tab button is this other button right, but its not doing anything. So let's hide it shall we? Unfortunately, if you look at the document tree you will see that it is just a general <code>.toolbarbutton</code> so we can't target it specifically with what we have learned until now.</p>
+
+<p>New tab button has an ID though, so we can definitely target that. And since the dumb button is adjacent to #new-tab-button we can also uniquely target it using adjacent combinator: <code>#new-tab-button + .toolbarbutton{ display: none }</code>. Nice, now we can fit a little more tabs. So adjacent sibling will target the second item if it becomes immediately after the first</p>
+
+<h3>General Siblings</h3>
+
+<p> General sibling combinator <code>~</code> works just like the adjacent sibling, but it will match <i>all</i> the elements matching the second selector, without them needing to become immediately after the first. So lets try something: <code>.tabbrowser-tab[selected] ~ .tabbrowser-tab{ background: green }</code> Now, if you select different tabs you'll see that all the tabs that become after it are green. If you change that <code>~</code> to <code>+</code> only the next one after selected will be green.</p>
+
+<p>Both of the sibling combinators have one limitation. The first and second selectors need to share the same parent - as in they have to on the same "level" in the document tree. In the tabs example the parent is <code>.scrollbox</code> so this works fine. However, you can't do something like <code>#new-tab-button ~ .titlebar-buttonbox-container{ background:red }</code> and expect it make "window controls" red, because if you look at the document tree you'll see that they don't have a common parent. Even if they look to be next to each other visually.</p>
+
+<h3>Attributes</h3>
+
+<p>Elements may have all sorts of attributes - which unfortunately you can't see in the tree-view (it would get too crowded). You can "access" them by using attribute selectors in combination of type,id or class selectors like this: <code>.tabbrowser-tab[selected]{ background: blue }</code></p>
+
+<p>Now, the declaration only applies to the selected tab. Attributes usually also have a value, that example applies always when the "selected" attribute exists but we might sometimes want to apply our rules only when the value is something specific: <code>.toolbarbutton[id="new-tab-button"]{ background:red }</code>
+This is actually the same thing as using selector <code>#new-tab-button</code> as you remember "#" means element id - so yes class and id are attributes as well.</p>
+
+<p>Actually setting those attributes isn't automatic and we can't do that in CSS. There is a javascript program running in background which handles that. Same deal as CSS not being able to change the document tree - we just list rules how things should look like under some conditions.</p>
+
+<h3>Pseudo-classes</h3>
+
+<p>The what now? These are automatically applied sort of "statuses" for elements. There is actually a whole bunch of pseudo-classes but we will look at two specific ones - <code>:hover</code> and <code>:not()</code> now because they are somewhat related to attributes.</p>
+
+<p>The <code>:hover</code> pseudo-class is automatically set for every element when the cursor is on top of them. This status also "bubbles" up in the document tree so when any element, like a .toolbarbutton has :hover status then also every ancestor (opposite of descendant) has that status. You see this in action in toolbar buttons and tabs. When you move the cursor on top of them, they change appearance. But you could also do <code>#main-window:hover{ background:red }</code> and now the background will be red when any part of the window has your cursor on top of it.</p>
+
+<p>Negation pseudo-class <code>:not()</code> negates the condition inside it. It's especially useful with attribute selectors. So you can write things like: <code>.tabbrowser-tab:not([selected]){ background:red }</code> which only apply to tabs which don't have an attribute called "selected".</p>
+
+<p>Okay, that's nice to know and all but not really that interesting. Yes, but you see, you are not limited to just simple combinators.</p>
+<p>Hit F1 button please.</p>
+<p>So some sort of menubar appears but now we have two sets of window controls which seems kinda wasteful don't you think? Menubar has an attribute called "hidden". Toyfox default rules hide the whole toolbar when that attribute exists but F1 removes that attribute (or adds it if it doesn't exist so you can hide it again). Lets see if we can construct a selector that hides the window-controls in tabs toolbar when the menubar is not hidden.</p>
+
+<p>So first thing we definitely need is the selector for menubar - find it using the document tree.</p>
+
+<p>Yeah, <code>#toolbar-menubar</code>, that's the one. Okay, then we need to only apply our rules when the element is not hidden. So we must combine <code>:not()</code> and <code>[hidden]</code>. Now, if you look at document tree you see that both, #toolbar-menubar and #TabsToolbar share the same parent - #titlebar so we may use sibling combinators here to target <code>#TabsToolbar</code>. Nice, for this purpose either one of adjacent or general would work. Of course, we don't want to hide the whole toolbar so lets continue chaining up selectors.</p>
+
+<p>The window controls are all inside .titlebar-buttonbox-container so we can just hide that and everything inside will also be hidden. That container is also a direct child of <code>#TabsToolbar</code> so we can use the child combinator <code>></code>. All that is left is to apply some rules to it. To hide we can just use<code>display: none</code> So lets's put all that together:</p>
+<pre><code>
+#toolbar-menubar:not([hidden]) + #TabsToolbar > .titlebar-buttonbox-container{ display: none }
+</pre></code>
+<p> SUCCESS! So now the window-controls on tabs toolbar are only shown when menubar is hidden. Nice UX</p>
+
+<h2>Information flow</h2>
+<p>Now, we basically covered all the combinators there. They all share one really important feature: <b>information only runs downhill</b>. There is a pretty nice analogy here.<p>
+
+<p>Consider the document as a real tree. It has a root, it's "outer-most" element (in Toyfox #main-window). All elements belong to that tree - just like leafs. Water flows from the roots through any branches until it eventually gets to the leafs. But it does not go to the opposite direction, ever.</p>
+
+<p>So what does "information" mean here? Well, easiest way to think about this are attributes. Consider this: <code>.tabbrowser-tab[selected] ~ .tabbrowser-tab{...}</code> This applies the rules in brackets to tabs that become <i>after</i> the selected tab, right?. Or this:<code>.toolbarbutton > .toolbarbutton-icon{...}</code> which applies to toolbarbutton-icons which are <i>inside</i> toolbarbutton.</p>
+
+<p>In both cases the later is below the former in the document tree. Okay, for the tab example we would need to modify the analogy a bit but it would still make sense. The important thing to know is that we can <i>never do the opposite</i>. So we can not make a rule that applies to tabs that come before the selected one. And we can not create a rule that applies to toolbarbuttons which have a child element called toolbarbutton-icon.</p>
+
+<p>Kind of an exeption is the :hover pseudo-class. By the tree-analogy it would mean something like "when you touch the tree". So even if you just touch one leaf, you are still touching the whole tree because the leaf is part of the tree. And thus the state is triggered for each ancestor of that leaf except for sections that are in another branch. Try this:</p>
+<pre><code>
+#main-window:hover{ background: yellow }
+#TabsToolbar:hover{ background: blue }
+#nav-bar:hover{ background: green }
+</code></pre>
+<p>It doesn't matter where within #main-window your cursor is, the background will still be yellow. Now, put your cursor on top of url bar. #nav-bar will be green because it is an ancestor of the #urlbar and so you are in a sense touching the nav-bar too. But TabsToolbar is in another branch of the tree and will not turn blue. Of course it will be if you actually move your cursor over it.</p>
+
+<p>Oh boy, that was that. If you read and understood all that you are ready to jump in to more specific things. If not, well just play around with Toyfox until it makes sense.</p>
+
+<h1>Properties</h1>
+
+<p>So, all that and we haven't really looked at any CSS properties yet. True, but honestly getting the key concepts is more important. The properties as just things which each have a dedicated page<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference" rel="nofollow">at MDN</a> which describe them. Those however won't do much without the basic knowledge. And at any rate, nobody expects you to remember all the properties anyway - everybody looks up stuff online when needed. Still, we'll go through some main ones here.</p>
+
+<h2>Box model</h2>
+<p>Each element generate something called a "box". These boxes are defined by four areas from outer to inner: margin, border, padding and content. Together these describe how big the box appears on your screen.</p>
+<p>Start by adding this bit <code>.demo-container{ visibility:visible; }</code> and a blue box should appear in the Toyfox "content" area. There is actually three boxes for demonstration purposes.</p>
+<p>The blue box is the inner-most box - "content". In this case it's automatically scaled to fit the text content inside. Now, lets add some border: <code>.demo-box{ border-width: 6px }</code>. Notice how the content box didn't scale at all but was surrounded by a black border. <i>The whole demo-box got bigger by 6 pixels on each side.</i>. Okay, now add some padding to .demo-box. You can add multiple properties to the same block by separating them with <code> ; </code> So the whole deal becomes:</p>
+<pre><code>
+.demo-box{
+  border-width: 4px;
+  padding:6px;
+}
+</code></pre> 
+<p>Just remember to keep the rule that sets things visible. Now, the padding box clearly is between border and the content. And again, the whole demo-box got bigger. The difference between these is that the padding-box color cannot be modified. Instead, the yellow that is visible is the background-color of the .demo-box. Change it's background to green <code>background:green</code></p>
+
+<p>Then we have margin. Same deal, add <code>margin: 6px</code> to .demo-box. Okay, as before, the box was surrounded by yet another box - now red. Now though, the .demo-box did not get bigger. The red you see is the background-color of the .demo-container which is the parent element of .demo-box.</p> In fact, all these properties made the parent bigger too, since it has to fit all its children inside it.</p>
+
+<p>Margin also can have negative values. The eventual behavior can change depending on the scenario but the gist of it is that the parent element reserves negative space for our box. Practically what this means is that the box can be moved to some direction, so now add this to demo-box: <code>margin-top: -12px</code></p> and it should be moved upwards outside the container.</p>
+
+<p>So all these affect how big the box will be, but they may also have an effect to all of that box's ancestor elements.</p>
+
+<h2>Positioning</h2>
+<p>By default, everything is positioned to the screen by some rules, but in a manner where elements that are close to each other in the document tree will also be close to each other in the visual space. This is called <code>position:static</code> A sort of extension to this is <code>position:relative</code> which gives us some addition freedom such as to move elements "behind" each other if they would overlap. So, if add just <code>z-index: -1</code> to .demo-box, nothing will happen. But if you also add <code>position:relative</code> it will disappear. Well, not disappear, just be drawn behind the whole window. Indeed, if you make the window background transparent <code>#main-window{ background-color: transparent }</code> you will see that our .demo-box is right there.</p>
+
+<p><i>Please remove the z-index and window transparency rules now so the following makes more sense</i></p>
+
+<p>Hopefully, it's by now clear that the appearance of any of the child elements affect the dimensions of the parent element and eventually the whole window because this effect cumulates. This is exactly what we saw happen earlier by setting a border for .toolbarbuttons and suddenly it affected whole UI. But wait, there is one exception to this rule. See what happens when you change the position of .demo-box to <code>fixed</code>.</p>
+
+<p>Hmm, the whole red box got removed but the demo-box is still there. Ok, what fixed position does is it removes the box from the normal layout. So now, the .demo-box does not affect the size of the container at all. And since there is nothing else inside the container its size becomes zero.</p>
+
+<p>Fixed positioning isn't something that you should often do though. However, sometimes there is no other way to do what you want, because we are not in control of the document structure. And with fixed positioning we can freely position the box to whatever coordinates within the browser window with <code>top:, right:, bottom:, left:</code> properties where zero coordinate is the window edge. So this <code>.demo-box{ position:fixed; bottom:0px; right: 0px; }</code> should put the demo-box close to bottom right corner. If you then remove the margin from it, then it should go to actual corner.</p>
+
+<p>Main drawback of fixed position is that the position cannot depend in any way from changes to the rest of the document - much like the rest of the document doesn't care about changes to the fixed element. This may not always matter if you can somehow guarantee that there won't ever be other elements where this fixed element is. But as a rule of thumb, you should first try to do whatever you want to do without fixed positioning.</p>
+
+<p>There will be an example later on for a case where fixed position is useful, but we need go through few more things before that.</p>
+
+<h2>Dimensions</h2>
+
+<p>First, remove the position:fixed from .demo-box. Second, give <i>.demo-container</i> <code>width:200px</code>and <code>height:100px</code>. The red box should now be wider and taller than it needs to.</p>
+
+<p>Just use width and height, easy right? <i>WRONG!</i> Oh man, it is much more complicated. Well, actually if you are talking about CSS in basic HTML then this is pretty much the general idea. However, Firefox UI is built with a language called XUL and it's default rules are vastly different to HTML. We will dig into the differences at later time, but for now you'll need to know that the behavior depends on something called Box Type.</p>
+
+<p>Actually, you have already used two box-type changing rules. Remember when you hid the other set of toolbarbuttons? You used <code>display: none</code>. It may not look like it but this set the box type to none which basically means, generate no box for this element. The display property does exactly this - change the box type. The other case was when you set <code>position:fixed</code> For reasons I'm not going to talk about, this also changes the box type to <code>block</code> and you cannot override it.</p>
+
+<p>You can read as much as your heart desires about this topic <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Visual_formatting_model" rel="nofollow">here on MDN</a>. Additionally, Toyfox uses flexbox model to emulate real Firefox behavior, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout" rel="nofollow">more about that right here</a></p>
+
+<p>The gist of it is though, that you are not be able to use simple width and height properties within Firefox or Toyfox UI. So how then? Let's see.</p>
+
+<p>You can clear the rules related to the .demo-box and .demo-container now as we won't be needing those again. Let's go back to our Toyfox UI because that's what you are really here for. Close all but one Toyfox tabs too and this will work better.</p>
+
+<p>First, lets paint the parent element of tabs something so we can better see it's boundaries: <code>#tabbrowser-tabs > .scrollbox{ background-color: #191919 }</code> Now, it should be evident that this element is much wider than our only tab. So, how do you make tabs wider? The width property <code>.tabbrowser-tab{ width: 200px }</code> ought to set width but if you try it nothing will happen.</p>
+
+<p>Both in Toyfox and in Firefox the tabs have this flexing property. In essence it means that if there is space then the tabs try to grow to fill that space. However, tabs also have a property called <code>max-width</code> which sets a limit for how much the tabs can grow. And, the scrollbox is constrained from outside so that it cannot get any narrower. So in the end there will be empty space inside it.</p>
+
+<p>Then when you add more tabs, they do get narrower until at some point they don't. They have now reached their <code>min-width</code> and won't be scaled down anymore. Instead, since the .scrollbox width is locked the tabs will overflow since they can't fit otherwise.</p>
+
+<p><i>Yeah, but I wanted to control the tab width - how?</i> Just set max-width to something like 200px, or to <code>none</code> if you want to make tabs expand to the whole scrollbox if they can.</p>
+
+<p><i>Don't actually do the above in real Firefox though, as it will cause tab closing to not work properly. </i><a href="https://github.com/MrOtherGuy/firefox-csshacks/blob/master/chrome/tabs_fill_available_width.css" rel="nofollow">Use this instead</a></p>
+
+<p>Height has exactly the same behavior. The point is that width and height properties only work if there are no external constraints or flexing behavior. But often that is not the case.</p>
+
+<h2>Shorthand properties</h2>
+<p>The observant you may have noticed that the provided examples have sometimes used <code>background-color:</code> and other times <code>background:</code>. There are actually multiple background related properties - background-color is just one of them. The <code>.tabbrowser-tab{ background: blue no-repeat }</code> actually means this:</p>
+<pre><code>
+.tabbrowser-tab{
+  background-color: blue;
+  background-position-x: 0%;
+  background-position-y: 0%;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-image: none;
+  background-size: auto auto;
+  background-origin: padding-box;
+  background-clip: border-box;
+}
+</code></pre>
+<p>This is what is known as a shorthand - a property that sets all the background-related properties at once, and the browser uses some defaults for the properties that it can't find at the shorthand value list. The other background-* properties are related to background-image. You can test what happens with this: <code>body{ background: red }</code> It makes the whole Toyfox editor red. Now change that to background-color. Is the behavior counter-intuitive? Perhaps, but it makes sense once you know that background-image is always drawn on top of background-color.</p> Background-image defaults to none, so the first example <code>background: red</code> sets the background-color to red alright, but it doesn't mention background-image and so the existing image (the checkerboard) is removed. The second example only sets background-color which now is indeed red but it's behind the image. Now, if you also apply <code>background-image: none</code> you should see that it is indeed red back there.</p>
+
+<p>Why do we have both? Well, the background-image might have transparency. So in those cases the background-color would be visible through the image.</p>
+
+<p>Another widely used shorthands are for padding and margin. Both have this format <code>.toolbarbutton{ margin: 1px 2px 3px 4px }</code> is same as:</p>
+
+<pre><code>
+.tabbrowser-tab{
+  margin-top: 1px;
+  margin-right: 2px;
+  margin-bottom: 3px;
+  margin-left: 4px;
+}
+</code></pre>
+
+<p>If the shorthand value list only has one value, then that is applied to every margin. If it has two values, then the first is for top and bottom, the second is for left and right. Same applies to padding.</p>
+
+<p>Yet another is border. This format is pretty widely used: <code>border: 2px solid black</code>. This sets all the borders (top/right/bottom/left) to 2px wide, solid color where the color is black. Another useful is Border-width property which is like a sub-shorthand. It takes up to four values in same format as padding and margin does and only sets width related border-properties.</p>
+
+<p>Usually, all properties that you see used that have a <i>whitespace separated</i> list of values are shorthands and as such may set more properties than they seem at first. But again, don't be afraid to refer to MDN to look up what properties actually do.</p>
+
+<h2>Variables</h2>
+<p>Also known as custom properties but I think that variable is a more descriptive term. A property that begins with a <code>--</code> indicates that it is a CSS variable. Syntactically they are applied to elements just like any other property, but they don't do anything unless some element actually uses that variable. So how are they useful?</p>
+
+<p>There is a high chance that you want different elements to share some color. But if you want to be able to change that color at some time, or in certain conditions, you would need to change that color for all affected elements. Sounds quite a lot of work, fortunately variables are a solution to this problem. Let's see, Toyfox uses this blue-ish color for toolbar, sidebar and selected tab, right? To change that we would need to do something like this:</p>
+
+<pre><code>
+.tabbrowser-tab[selected],
+#nav-bar,
+#PersonalToolbar,
+#sidebar{
+  background-color: rgba(20,40,10,0.7);
+}
+</code></pre>
+
+<p>Okay, in this case that wasn't so bad. But once we add more conditions and more elements to that should be affected the complexity quickly build up and becomes really hard to manage. So what if you wanted to set this color based on what tab is selected? Firefox and Toyfox have a title attribute on #main-window that reflects the current tab title. You can ue that but the selectors become annoying:</p>
+
+<pre><code>
+#main-window[title="a Tab"] .tabbrowser-tab[selected],
+#main-window[title="a Tab"] #nav-bar,
+#main-window[title="a Tab"] #PersonalToolbar,
+#main-window[title="a Tab"] #sidebar{
+  background-color: rgba(20,40,10,0.7);
+}
+</code></pre>
+
+<p>And if you want to add colors to other titles too then you'll have to repeat all that. But with variables we can do this:</p>
+
+<pre><code>
+#main-window{ --background-color: rgba(30,40,66,0.7) }
+#main-window[title="a Tab"]{ --background-color: rgba(20,40,10,0.7) }
+#main-window[title="tabberino"]{ --background-color: rgba(40,40,10,0.7) }
+#main-window[title="tab this"]{ --background-color: rgba(80,40,40,0.7) }
+
+.tabbrowser-tab[selected],
+#nav-bar,
+#PersonalToolbar,
+#sidebar{
+  background-color: var(--background-color);
+}
+</code></pre>
+
+<p>See, now we can just set the variable value on #main-window based on some condition and use whatever this color happens to be in the elements we want. How cool is that! But remember that even if we set the variable for #main-window it does absolutely nothing unless it is used somewhere. That's why we need to <i>refer</i> to it by using the <code>var()</code> function.</p>
+
+<p>The variable is visible to all elements in the branch that it is set in. You can override it on any branch that you wish though. You can for example add this:<code>#navigator-toolbox{ --background-color: olive }</code> and the value will be changed for toolbars and the tab but not sidebar. Sidebar still "sees" the value in #main-window since it is not in the #navigator-toolbox branch.</p>
+
+<p>Variables are very heavily used inside Firefox. There is absolutely enormous amount of different conditions, not to mention theming support which would not be practical without them. That is why you may have often seen rules like <code>#main-window{ --toolbar-bgcolor: rgba(25,25,200,.5) !important; }</code> to change the Firefox UI color. Elements use the color in that variable by built-in rules. We just override that variable. And of course the elements stop respecting this variable if their background-color is not set to refer to the variable anymore.</p>
+
+<h2>Pseudo-elements</h2>
+<p>We already talked about pseudo-classes (:hover,:not(),etc.) remember? Pseudo-elements are different beasts, don't mix the two. So what are these then? Pseudo-elements are a way to add some content to the document.</p>
+
+<p>Now that should ring some bells. If you remember, in beginning I said that we can't modify the document with CSS. Pseudo-elements are the one exception to that very important rule. They don't come without restrictions though. This is how they work:</p>
+
+<pre><code>
+.tabbrowser-tab::before{ content: "1" }
+.tabbrowser-tab::after{ content: "2" }
+</code></pre>
+
+<p>This creates elements which are first child and last child of .tabbrowser-tab. It's not possible to create these somewhere in-between. However, they are not restricted to simple text elements. We can control their box-model and appearance just like any other element. The other restriction is that they are not <i>really</i> in the document tree. They can't have attributes or pseudo-classes of their own. So we can't do stuff like this:<code>.tabbrowser-tab::after:hover + .tab-icon-image{ ... }</code> Basically that translates to "apply these to tab icon if the cursor is on top of the pseudo-element".</p>
+
+<p>So let's experiment a bit. Real browsers show the url of link and bookmarks in the corner of the window. Now, toyfox doesn't have that feature. But we can sort of fake it using nothing but CSS. So how should we go about doing that?</p>
+
+<p>Now, the information we need is only stored in the title attribute of each .bookmark-item so that is definitely the highest-up element we can work with. The information doesn't flow outwards in the tree right? Next, we need to show <i>something new</i>, but we just learned we can do that with pseudo-elements. Now of course we only want to show stuff related to the bookmark that is under the cursor. <code>:hover</code> does just that. So at this point we have:</p>
+
+<pre><code>
+.bookmark-item:hover::after{
+  content: "bookmark";
+}  
+</pre></code>
+<p>Now, that isn't too helpful is it. Don't worry about the content just yet. More pressing matter is that we definitely don't want to show the content inside that bookmark. Now, lets make fixed positioning useful for once. Apply <code>position:fixed</code> and then <code>bottom:0px</code> and <code>right:0px</code> like we did with the demo box earlier.</p>
+
+<p>Now we are getting somewhere. So we have a box with text now in roughly the correct place. Add some light background color of your choosing to it and then make the text black with <code>color:</code> property. Well alright, now perhaps slight padding to it maybe <code>padding: 1px 5px;</code> for 1px vertical and 5px horizontal. Would maybe look better still with a 1px border on top and left side. So lets do that by using what we learned about shorthands.</p>
+<pre><code>
+border: solid rgb(90,90,90);
+border-width: 2px 0 0 2px;
+</code></pre>
+
+<p>We use the first shorthand to quickly set all borders to some solid rgb() color. And then use border-width shorthand to set the individual border-widths. As a final touch we can add small rounding effect with <code>border-radius: 4px 0 0 0;</code></p>
+
+<p>Ok, well it looks fine now but that static text ain't too helpful still. Right, well content property can actually be used to show attributes of the parent element by using <code>attr()</code> function. So instead of <code>"bookmarks"</code> use <code>attr(title)</code> The whole thing should look like this:</p>
+
+<pre><code>
+.bookmark-item:hover::after{
+  content: attr(title);
+  position:fixed;
+  bottom:0px;
+  right:0px;
+  background:rgb(210,210,210);
+  color: black;
+  padding: 1px 5px;
+  border: solid rgb(90,90,90);
+  border-width: 1px 0 0 1px;
+  border-radius:  4px 0 0 0;
+}  
+</code></pre>
+
+<p>Dang, now that is pretty awesome don't ya think?</p>
+
+<h1>Specificity</h1>
+<p>The idea here is as following; your stylesheet may have hundreds of rulesets but what do you do when some rules "collide"? Such as this case:</p>
+<pre><code>
+.tabbrowser-tab{ background: blue }
+.tabbrowser-tab[selected]{ background: red }
+</code></pre>
+<p>You might be tempted to say that whichever comes lated will be used. Makes kind of sense, and infact that is what can happen. But the order of the rules in the stylesheet is only the last thing that the browser checks when determining importance. And indeed, if you put those rules in opposite order, the tab will still be red</p>
+
+<p>Priority in descending order:</p>
+<ol>
+<li>Declaration has "!important" tag</li>
+<li>Element uses inline style (elements may have "style" attribute)</li>
+<li>Selector uses ID</li>
+<li>Selector uses class, attribute or pseudo-class</li>
+<li>Selector uses tag name</li>
+<li>Selector uses universal selector *</li>
+<li>Declaration becomes later in the css file</li>
+</ol>
+
+<p>We can increase specificity by adding more selectors to the one we want, such as <code>.scrollbox > .tabbrowser-tab{ background:blue }</code>. See, now it has two class selectors and will override all that only have only one. However, now both this and the one that uses [selected] attribute have two of the same "level". Now whichever comes later will be used.</p>
+
+<p>Any "amount" of the lower level items won't win against one higher up, if that makes sense. What this means is that if we have this:</p>
+
+<pre><code>
+#tabbrowser-tabs .tabbrowser-tab{ background: blue }
+div.scrollbox > div.tabbrowser-tab[selected]{ background: red }
+</code></pre>
+
+<p>Here the top one has 1 ID-level selector and 1 class-level selector. The bottom has 3 class-level selectors and 2 tag-name-level selectors and is later in the file. But the top one will always win because it has on ID-level selector. The bottom could have million class-level selectors and it still won't win.</p>
+
+<p>Now, Firefox UI uses for some purposes style attributes. These win against #ID selectors though, and for those cases we have no option other than to resort to:</p>
+
+<p>The infamous <code>!important</code> tag. Just add that after the property value: <code>.tabbrowser-tab{ background: red !important }</code></p>
+
+<p>Now remember Firefox has whole bunch of CSS rules built-in, so your rules are competing against those. This means that often you need to increase specificity and the !important tag is usually the easiest way to do that. In some rare cases the built-in rules might also use !important so then you have no other option than to increase specificity by other means.</p>
+
+<p>Congratulations! That was all about the CSS basics. Hopefully you have by now the general idea about how things work. Seriously, that was a lot of information so you can pat yourself in the back for me.</p>
+
+<p>So well next be looking Firefox more specifically. Although it's similar to Toyfox there a loads of different behavior and additional stuff that isn't possible or practical to emulate with Toyfox.</p>
+
+<p>And sadly, documentation is pretty scarce, although MDN has some bits and pieces</p> So you are of to a great start, but still have the rest of the course to run.</p>
+
+<h1 id="browserChanges">Browser Structure</h1>
+<p>TBD</p>
+</div>
+<div class="infobar dark">
+			<span>© 2019 MrOtherGuy</span>
+			<a href="https://github.com/MrOtherGuy/QRier/">Source @ GitHub</a>
+		</div>
+
+</div>
+</body>
+</html>

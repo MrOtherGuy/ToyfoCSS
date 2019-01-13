@@ -1,0 +1,6 @@
+:root{scrollbar-color: rgb(198, 198, 144) rgb(50, 50, 50); scrollbar-width: thin}
+body{background:rgb(50,50,50);}
+span{color:#20B2AA}
+span+span{color:#CD5C5C}
+span+span+span{color:#808000}
+br{display:none}
