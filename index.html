@@ -211,7 +211,7 @@ This is actually the same thing as using selector <code>#new-tab-button</code> a
 <p>The window controls are all inside .titlebar-buttonbox-container so we can just hide that and everything inside will also be hidden. That container is also a direct child of <code>#TabsToolbar</code> so we can use the child combinator <code>></code>. All that is left is to apply some rules to it. To hide we can just use<code>display: none</code> So lets's put all that together:</p>
 <pre><code>
 #toolbar-menubar:not([hidden]) + #TabsToolbar > .titlebar-buttonbox-container{ display: none }
-</pre></code>
+</code></pre>
 <p> SUCCESS! So now the window-controls on tabs toolbar are only shown when menubar is hidden. Nice UX</p>
 
 <h2>Information flow</h2>
@@ -249,7 +249,7 @@ This is actually the same thing as using selector <code>#new-tab-button</code> a
 </code></pre> 
 <p>Just remember to keep the rule that sets things visible. Now, the padding box clearly is between border and the content. And again, the whole demo-box got bigger. The difference between these is that the padding-box color cannot be modified. Instead, the yellow that is visible is the background-color of the .demo-box. Change it's background to green <code>background:green</code></p>
 
-<p>Then we have margin. Same deal, add <code>margin: 6px</code> to .demo-box. Okay, as before, the box was surrounded by yet another box - now red. Now though, the .demo-box did not get bigger. The red you see is the background-color of the .demo-container which is the parent element of .demo-box.</p> In fact, all these properties made the parent bigger too, since it has to fit all its children inside it.</p>
+<p>Then we have margin. Same deal, add <code>margin: 6px</code> to .demo-box. Okay, as before, the box was surrounded by yet another box - now red. Now though, the .demo-box did not get bigger. The red you see is the background-color of the .demo-container which is the parent element of .demo-box. In fact, all these properties made the parent bigger too, since it has to fit all its children inside it.</p>
 
 <p>Margin also can have negative values. The eventual behavior can change depending on the scenario but the gist of it is that the parent element reserves negative space for our box. Practically what this means is that the box can be moved to some direction, so now add this to demo-box: <code>margin-top: -12px</code></p> and it should be moved upwards outside the container.</p>
 
