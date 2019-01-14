@@ -52,7 +52,7 @@ label:hover{ background:rgba(50,50,90,0.2) }
 #toggleFrame{ display: none }
 #toggleFrame~label{ padding:2px }
 
-#toggleFrame:not(:checked) + iframe{ visibility: collapse }
+#toggleFrame:not(:checked) + iframe{ display:none }
 
 code{
   padding: 3px;
@@ -106,7 +106,7 @@ code > .i{color:#EE2222}
     width: 100%;
     flex-shrink: 0;
   }
-  label{ width: 100%; display: flex; justify-content: center}
+  label{ width: 100%; display: flex; justify-content: center; flex-shrink:0}
   #toggleFrame:not(:checked) ~ label > span{ transform: rotate(180deg) }
 }
 
