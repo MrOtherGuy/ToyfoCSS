@@ -1,7 +1,7 @@
 function removeTab(e){
 	e.stopPropagation();
 	let tab = e.target.parentNode;
-	if(tab.parentNode.children.length < 2){
+	if(getNodeList(tab.parentNode).length < 2){
 		return
 	};
 	let isSelected = tab.hasAttribute("selected");
@@ -9,6 +9,10 @@ function removeTab(e){
 	tab.parentNode.removeChild(tab);
 	
 	return
+}
+
+function getNodeList(e){
+	return Array.from(e.childNodes).filter(node => node.nodeType != 3);
 }
 
 function getTabScrollbox(){
@@ -43,7 +47,7 @@ function scrollInc(e){
 function changeSelected(e){
 	let isTab = (el)=>(el.classList.contains("tabbrowser-tab"));
 	let getTab = (el)=>(isTab(el)?el:getTab(el.parentNode));
-	 for(let node of getTabScrollbox().children){
+	 for(let node of getNodeList(getTabScrollbox())){
 		node.removeAttribute("selected");
 	}
 	let aTab = getTab(e.target?e.target:e);
@@ -70,7 +74,7 @@ function iconizedLabel(text){
 function bookmark(text){
 	let bm = new iconizedLabel(text);
 	bm.classList.add("bookmark-item");
-	bm.addEventListener("click",()=>(addTab(bm.children[1].textContent)));
+	bm.addEventListener("click",()=>(addTab(getNodeList(bm)[1].textContent)));
 	return bm
 }
 
@@ -206,5 +210,4 @@ createButtonIcons();
 document.addEventListener("keyup",(e)=>(e.key==="F1"&&toggleMenu()));
 document.querySelector("#editCSS").addEventListener("input",lazyLoadCSS,false);
 
-//getTabScrollbox().children[0].click();
 });
