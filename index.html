@@ -7,7 +7,7 @@
   <script type="text/javascript" src="guide.js"></script>
 </head>
 <body>
-<input type="checkbox" id="toggleFrame" name="toggleFrame"></input>
+<input type="checkbox" id="toggleFrame" name="toggleFrame">
 <iframe src="resources/toyfox.html" height="100%" width="100%"></iframe>
 <label for="toggleFrame"><span>▲</span></label>
 <div class="contentContainer">
@@ -251,7 +251,7 @@ This is actually the same thing as using selector <code>#new-tab-button</code> a
 
 <p>Then we have margin. Same deal, add <code>margin: 6px</code> to .demo-box. Okay, as before, the box was surrounded by yet another box - now red. Now though, the .demo-box did not get bigger. The red you see is the background-color of the .demo-container which is the parent element of .demo-box. In fact, all these properties made the parent bigger too, since it has to fit all its children inside it.</p>
 
-<p>Margin also can have negative values. The eventual behavior can change depending on the scenario but the gist of it is that the parent element reserves negative space for our box. Practically what this means is that the box can be moved to some direction, so now add this to demo-box: <code>margin-top: -12px</code></p> and it should be moved upwards outside the container.</p>
+<p>Margin also can have negative values. The eventual behavior can change depending on the scenario but the gist of it is that the parent element reserves negative space for our box. Practically what this means is that the box can be moved to some direction, so now add this to demo-box: <code>margin-top: -12px</code> and it should be moved upwards outside the container.</p>
 
 <p>So all these affect how big the box will be, but they may also have an effect to all of that box's ancestor elements.</p>
 
@@ -311,7 +311,9 @@ This is actually the same thing as using selector <code>#new-tab-button</code> a
   background-clip: border-box;
 }
 </code></pre>
-<p>This is what is known as a shorthand - a property that sets all the background-related properties at once, and the browser uses some defaults for the properties that it can't find at the shorthand value list. The other background-* properties are related to background-image. You can test what happens with this: <code>body{ background: red }</code> It makes the whole Toyfox editor red. Now change that to background-color. Is the behavior counter-intuitive? Perhaps, but it makes sense once you know that background-image is always drawn on top of background-color.</p> Background-image defaults to none, so the first example <code>background: red</code> sets the background-color to red alright, but it doesn't mention background-image and so the existing image (the checkerboard) is removed. The second example only sets background-color which now is indeed red but it's behind the image. Now, if you also apply <code>background-image: none</code> you should see that it is indeed red back there.</p>
+<p>This is what is known as a shorthand - a property that sets all the background-related properties at once, and the browser uses some defaults for the properties that it can't find at the shorthand value list. The other background-* properties are related to background-image. You can test what happens with this: <code>body{ background: red }</code> It makes the whole Toyfox editor red. Now change that to background-color. Is the behavior counter-intuitive? Perhaps, but it makes sense once you know that background-image is always drawn on top of background-color.</p>
+
+<p>Background-image defaults to none, so the first example <code>background: red</code> sets the background-color to red alright, but it doesn't mention background-image and so the existing image (the checkerboard) is removed. The second example only sets background-color which now is indeed red but it's behind the image. Now, if you also apply <code>background-image: none</code> you should see that it is indeed red back there.</p>
 
 <p>Why do we have both? Well, the background-image might have transparency. So in those cases the background-color would be visible through the image.</p>
 
@@ -399,7 +401,7 @@ This is actually the same thing as using selector <code>#new-tab-button</code> a
 .bookmark-item:hover::after{
   content: "bookmark";
 }  
-</pre></code>
+</code></pre>
 <p>Now, that isn't too helpful is it. Don't worry about the content just yet. More pressing matter is that we definitely don't want to show the content inside that bookmark. Now, lets make fixed positioning useful for once. Apply <code>position:fixed</code> and then <code>bottom:0px</code> and <code>right:0px</code> like we did with the demo box earlier.</p>
 
 <p>Now we are getting somewhere. So we have a box with text now in roughly the correct place. Add some light background color of your choosing to it and then make the text black with <code>color:</code> property. Well alright, now perhaps slight padding to it maybe <code>padding: 1px 5px;</code> for 1px vertical and 5px horizontal. Would maybe look better still with a 1px border on top and left side. So lets do that by using what we learned about shorthands.</p>
@@ -467,9 +469,9 @@ div.scrollbox > div.tabbrowser-tab[selected]{ background: red }
 
 <p>Congratulations! That was all about the CSS basics. Hopefully you have by now the general idea about how things work. Seriously, that was a lot of information so you can pat yourself in the back for me.</p>
 
-<p>So well next be looking Firefox more specifically. Although it's similar to Toyfox there a loads of different behavior and additional stuff that isn't possible or practical to emulate with Toyfox.</p>
+<p>So well next be looking Firefox more specifically. Although it's similar to Toyfox there a loads of different behavior and additional stuff that isn't possible or practical to emulate with Toyfox. And sadly, documentation is pretty scarce, although MDN has some bits and pieces</p>
 
-<p>And sadly, documentation is pretty scarce, although MDN has some bits and pieces</p> So you are of to a great start, but still have the rest of the course to run.</p>
+<p> But you are of to a great start, but still have the rest of the course to run.</p>
 
 <h1 id="browserChanges">Browser Structure</h1>
 <p>TBD</p>
