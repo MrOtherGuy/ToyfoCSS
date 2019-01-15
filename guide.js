@@ -80,7 +80,7 @@ function colorize(block){
 }
 
 function highlight(){
-let codes = document.getElementsByTagName("code");
+let codes = document.querySelectorAll("code");
   for(let code of codes){
     let blocks = code.textContent.split("}");
     if(blocks.length>1){
